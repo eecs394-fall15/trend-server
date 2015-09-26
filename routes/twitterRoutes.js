@@ -1,16 +1,16 @@
 var express = require('express');
 var router = express.Router();
 var Twitter = require('twitter');
-process.env.twitter = require('../.env').twitter;
+process.env.
 
 
 
 
 var client = new Twitter({
-	consumer_key: '8hIhA4lPweK0zKGkLC1TlP24m',
-	consumer_secret: 'Bw58SuhKWRjRGzMuT5gIQU73NeibESxSIWFiqFr2ZlH8r0bfmA',
-	access_token_key: '1604262216-inPYjgef9gnX6QXTuZJRhMh8KLWJ6EHvCIRbcVO',
-	access_token_secret: 'SnVMmCuH7rv1Qzb9yTPF2XyUHdY9LltKhW590GVKroYC6'
+	consumer_key: process.env.CONSUMER_KEY,
+	consumer_secret: process.env.CONSUMER_SECRET,
+	access_token_key: process.env.ACCESS_TOKEN_KEY,
+	access_token_secret: process.env.ACCESS_TOKEN_SECRET
 });
 
 
