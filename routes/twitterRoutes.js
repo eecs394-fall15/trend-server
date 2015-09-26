@@ -14,18 +14,20 @@ var client = new Twitter({
 
 /*********** TRENDS **********************************/
 
-route.use('/trends', function(req, res, next) {
+router.use('/trends', function(req, res, next) {
 	//defaults to global trends
 	var location = req.params.location || 1;
-	req.params.query = {id : location};
+	req.custom= {id : location};
+
 	console.log('Trends requested for: ' + location);
 	next();
 });
 
-router.get('/trends/:location', function(req, res, next){
-	var query = req.params.query;
+router.get( ['/trends', '/trends/:location'], function(req, res, next){
+	var query = req.custom
+
 	if(!query)
-		res.send(400)
+		res.send(400);
 
 	client.get('trends/place', query, function(error, tweets, response){
 		if (!error) 
@@ -38,11 +40,11 @@ router.get('/trends/:location', function(req, res, next){
 
 /*********** LISTS **********************************/
 
-route.use('/lists', function(req, res,next){
+router.use('/lists', function(req, res,next){
 	//defaults to @BreakingNews\/canada list
 	var list = req.params.list || 6017542;
 	var slug = req.params.list || 'canada'
-	req.params.query = { 
+	req.custom = { 
 		list_id : list,
 		slug : slug
 	};
@@ -52,8 +54,8 @@ route.use('/lists', function(req, res,next){
 });
 
 
-route.get('/lists/:id/:slug', function(req, res, next) {
-	var query = req.params.query;
+router.get(['/lists', '/lists/:id/:slug'], function(req, res, next) {
+	var query = req.custom;
 	if(!query)
 		res.send(400);
 
