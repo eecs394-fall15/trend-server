@@ -16,7 +16,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-
+app.set('port', (process.env.PORT || 8080));
 app.use('/', routes);
 
 // catch 404 and forward to error handler
@@ -51,7 +51,7 @@ app.use(function(err, req, res, next) {
 });*/
 
 
-app.listen(8080);
-console.log('server is up');
+app.listen(app.get('port'));
+console.log('server is up on: ' + app.get('port'));
 
 module.exports = app;

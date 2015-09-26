@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.send('Server is up on: 3000');
+  res.send('Server is up');
 });
 
 router.use('/twitter', require('./twitterRoutes'));
