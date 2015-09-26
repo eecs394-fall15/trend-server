@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var Twitter = require('twitter');
-process.env.
 
 
 
