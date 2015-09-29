@@ -49,12 +49,13 @@ router.get("/search/:term", function(req, res, next){
 	}
 
 	var query = {
-		query : req.params.term,
+		query : decodeURIComponent(req.params.term),
 		sort : 'newest'
 	};
 
 	client.article.search(query, function(articles, error){
 		if(!error)
+			articles.search = decodeURIComponent(req.params.term);
 			res.send(articles);
 		else {
 			console.log(error);
