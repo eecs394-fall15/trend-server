@@ -71,7 +71,7 @@ router.get(['/lists', '/lists/:id/:slug'], function(req, res, next) {
 
 
 /************ SEARCH ****************************************/
-router.get("/search/:term/:type", function(req, res, next){
+router.get(["/search/:term", "/search/:term/:type"], function(req, res, next){
 	//encodeURIComponent() if need be
 	console.log(req.params.term);
 	if (!req.params.term)
