@@ -80,7 +80,7 @@ router.get("/search", function(req, res, next){
 	var query = {
 		q : req.query.q,
 		result_type : req.query.result_type || 'mixed',
-		count : 30
+		count : 20
 	};
 
 	client.get('/search/tweets', query, function(error, tweets, response){
