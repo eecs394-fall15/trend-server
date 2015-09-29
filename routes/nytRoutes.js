@@ -42,20 +42,18 @@ router.get( ['/trends', '/trends/:location'], function(req, res, next){
 /************ SEARCH ****************************************/
 router.get("/search/:term", function(req, res, next){
 	//encodeURIComponent() if need be
-
 	if (!req.params.term){
 		console.log('No query specified');
 		//res.sendStatus(400);
 	}
-
+	var term = decodeURIComponent(req.params.term);
 	var query = {
-		query : decodeURIComponent(req.params.term),
+		query : term,
 		sort : 'newest'
 	};
 
 	client.article.search(query, function(articles, error){
 		if(!error)
-			articles.search = decodeURIComponent(req.params.term);
 			res.send(articles);
 		else {
 			console.log(error);
