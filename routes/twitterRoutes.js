@@ -43,7 +43,7 @@ router.get( ['/trends', '/trends/:location'], function(req, res, next){
 router.use('/lists', function(req, res,next){
 	//defaults to @BreakingNews\/canada list
 	var list = req.params.list || 6017542;
-	var slug = req.params.list || 'canada'
+	var slug = req.params.slug || 'canada'
 	req.custom = { 
 		list_id : list,
 		slug : slug
@@ -66,6 +66,33 @@ router.get(['/lists', '/lists/:id/:slug'], function(req, res, next) {
 			next();
 	});
 });
+
+
+
+
+/************ SEARCH ****************************************/
+router.get("/search", function(req, res, next){
+	//encodeURIComponent() if need be
+	console.log(req.query);
+	if (!req.query.q)
+		res.send(400);
+
+	var query = {
+		q : req.query.q,
+		result_type : req.query.result_type || 'mixed',
+		count : 30
+	};
+
+	client.get('/search/tweets', query, function(error, tweets, response){
+		if(!error)
+			res.send(tweets);
+		else
+			next();
+	});
+});
+
+
+
 
 
 
