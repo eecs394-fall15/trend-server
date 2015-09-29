@@ -71,12 +71,13 @@ router.get(['/lists', '/lists/:id/:slug'], function(req, res, next) {
 
 
 /************ SEARCH ****************************************/
-router.get("/search", function(req, res, next){
+router.get(["/search/:term", "/search/:term/:type"], function(req, res, next){
 	//encodeURIComponent() if need be
-	console.log(req.query);
-	if (!req.query.q)
+	console.log(req.params.term);
+	if (!req.params.term)
 		res.send(400);
 
+	var search = decodeURIComponent(req.params.term);
 	var query = {
 		q : req.query.q,
 		result_type : req.query.result_type || 'mixed',
@@ -84,8 +85,10 @@ router.get("/search", function(req, res, next){
 	};
 
 	client.get('/search/tweets', query, function(error, tweets, response){
-		if(!error)
+		if(!error) {
+			tweets.search = search;
 			res.send(tweets);
+		}
 		else
 			next();
 	});

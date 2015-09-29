@@ -40,16 +40,15 @@ router.get( ['/trends', '/trends/:location'], function(req, res, next){
 
 
 /************ SEARCH ****************************************/
-router.get("/search", function(req, res, next){
+router.get("/search/:term", function(req, res, next){
 	//encodeURIComponent() if need be
-
-	if (!req.query.q){
+	if (!req.params.term){
 		console.log('No query specified');
 		//res.sendStatus(400);
 	}
-
+	var term = decodeURIComponent(req.params.term);
 	var query = {
-		query : req.query.q,
+		query : term,
 		sort : 'newest'
 	};
 
