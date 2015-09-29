@@ -42,10 +42,11 @@ router.get( ['/trends', '/trends/:location'], function(req, res, next){
 /************ SEARCH ****************************************/
 router.get("/search", function(req, res, next){
 	//encodeURIComponent() if need be
-	console.log(req.query);
 
-	if (!req.query.q)
-		res.sendStatus(400);
+	if (!req.query.q){
+		console.log('No query specified');
+		//res.sendStatus(400);
+	}
 
 	var query = {
 		query : req.query.q,
