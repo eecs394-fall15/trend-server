@@ -71,15 +71,15 @@ router.get(['/lists', '/lists/:id/:slug'], function(req, res, next) {
 
 
 /************ SEARCH ****************************************/
-router.get("/search", function(req, res, next){
+router.get("/search/:term/:type", function(req, res, next){
 	//encodeURIComponent() if need be
-	console.log(req.query);
-	if (!req.query.q)
+	console.log(req.params.term);
+	if (!req.params.term)
 		res.send(400);
 
 	var query = {
-		q : req.query.q,
-		result_type : req.query.result_type || 'mixed',
+		q : req.params.term,
+		result_type : req.params.type || 'mixed',
 		count : 30
 	};
 
