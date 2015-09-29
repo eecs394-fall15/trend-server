@@ -77,9 +77,9 @@ router.get(["/search/:term", "/search/:term/:type"], function(req, res, next){
 	if (!req.params.term)
 		res.send(400);
 
-	var search = decodeURIComponent(req.params.term);
+	var search = req.params.term;
 	var query = {
-		q : req.query.q,
+		q : search,
 		result_type : req.query.result_type || 'mixed',
 		count : 20
 	};

@@ -46,7 +46,7 @@ router.get("/search/:term", function(req, res, next){
 		console.log('No query specified');
 		//res.sendStatus(400);
 	}
-	var term = decodeURIComponent(req.params.term);
+	var term = req.params.term;
 	var query = {
 		query : term,
 		sort : 'newest'
