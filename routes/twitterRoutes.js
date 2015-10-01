@@ -31,7 +31,7 @@ router.get( ['/trends', '/trends/:location'], function(req, res, next){
 
 	client.get('trends/place', query, function(error, tweets, response){
 		if (!error) 
-			res.jsonp(tweets);
+			res.send(tweets);
 		else
 			next();
 	});
