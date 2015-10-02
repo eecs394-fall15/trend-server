@@ -9,5 +9,6 @@ router.get('/', function(req, res, next) {
 router.use('/twitter', require('./twitterRoutes'));
 //router.use('/yahoo', );
 router.use('/nyt', require('./nytRoutes'));
+router.use('/reddit', require('./redditRoutes'));
 
 module.exports = router;
