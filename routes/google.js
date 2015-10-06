@@ -38,7 +38,6 @@ function respond(res, queryData){
 		}, 250);	
 	} else {
 		res.send(queryData);
-		strem.disconnect();
 	}
 }
 

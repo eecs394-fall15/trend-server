@@ -1,6 +1,9 @@
 var express= require('express');
 var router = express.Router();
 var Yahoo = require('yaboss');
+var request = require('request');
+var qs = require('querystring');
+
 
 var client = new Yahoo(
 	//process.env.YAHOO_CLIENT_ID, process.env.YAHOO_CLIENT_SECRET);
@@ -29,6 +32,26 @@ router.get("/search/:search", function(req, res, next){
 			next();
 		}
 	});
+});
+
+
+
+
+var url = 'https://yboss.yahooapis.com/ysearch/web';
+
+var params = qs.stringify({
+  q: 'Yahoo Mobile Developer Suite',
+  format: 'json',
+  count: '10',
+});
+
+var oauth = {
+  consumer_key: 'Your Consumer Key',
+  consumer_secret: 'Your Consumer Secret'
+};
+
+request.get({ url: url + '?' + params, oauth: oauth, json: true }, function(e, r, body) {
+  console.log(body);
 });
 
 module.exports.router = router;
