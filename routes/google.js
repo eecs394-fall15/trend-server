@@ -25,13 +25,22 @@ router.get('/search/:search', function(req, res, next){
 			return console.log('Error Event received... ' + error);
 		});
 
-		//collects from the stream
-		setTimeout(function(){
-			res.send(queryData);
-		}, 150);
+
+		respond(res, queryData);
 	});
 });
 
+
+function respond(res, queryData){
+	if (queryData.length < 3)  { 
+		setTimeout(function(){
+			respond(res, queryData);
+		}, 250);	
+	} else {
+		res.send(queryData);
+		strem.disconnect();
+	}
+}
 
 module.exports.router = router;
 

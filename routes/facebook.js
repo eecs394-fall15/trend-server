@@ -25,7 +25,7 @@ fb.setAccessToken("1531764247114354|jMvOM5nXEoQX7SdRPTR2-Sjn4qE");
 
 router.get('/search/:search', function(req, res, next){
 	var query = req.params.search;
-
+	console.log('Facebook search for  : %s', query);
 	// console.log(accessToken);
 
 	if(!query)
@@ -36,6 +36,8 @@ router.get('/search/:search', function(req, res, next){
 		q: query,
 		fields: "id,name,page"
 	}
+
+
 	fb.api('/search',options, function(response){
 		if (response.error)
 			console.log(response.error);

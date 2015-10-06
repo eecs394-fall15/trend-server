@@ -6,7 +6,6 @@ var router = express.Router();
 var bingNews = new BingNews();
 
 
-
 router.get('/search/:search', function(req, res, next){
 
 	var query = req.params.search;
@@ -26,12 +25,20 @@ router.get('/search/:search', function(req, res, next){
 		});
 
 		//collects from the stream
-		setTimeout(function(){
-			res.send(queryData);
-			stream.disconnect();
-		}, 1000);
+		respond(res, queryData);
 	});
 });
+
+
+function respond(res, queryData){
+	if (queryData.length < 3)  { 
+		setTimeout(function(){
+			respond(res, queryData);
+		}, 250);	
+	} else {
+		res.send(queryData);
+	}
+}
 
 
 module.exports.router = router;
