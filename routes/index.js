@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
 /* NEWS SERVICE ENDPOINTS */
 
 router.use('/twitter', require('./twitterRoutes').router);
-router.use('/yahoo', require('./yahooRoutes').router);
+// router.use('/yahoo', require('./yahooRoutes').router);
 router.use('/nyt', require('./nytRoutes').router);
 router.use('/reddit', require('./redditRoutes').router);
 router.use('/ninegag', require('./ninegag').router);
