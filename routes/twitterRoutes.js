@@ -12,87 +12,102 @@ var client = new Twitter({
 });
 
 
+
+var handlers = {
+	trends: function(req, res, next) {
+		//defaults to global trends
+		var location = req.params.location || 1;
+		req.custom= {id : location};
+
+		console.log('Trends requested for: ' + location);
+		next();
+	},
+
+	searchTrends: function(req, res, next){
+		var query = req.custom
+
+		if(!query)
+			res.send(400);
+
+		client.get('trends/place', query, function(error, tweets, response){
+			if (!error) 
+				res.send(tweets);
+			else
+				next();
+		});
+	},
+
+
+
+	lists: function(req, res,next){
+		//defaults to @BreakingNews\/canada list
+		var list = req.params.list || 6017542;
+		var slug = req.params.slug || 'canada'
+		req.custom = { 
+			list_id : list,
+			slug : slug
+		};
+
+		console.log('List requested for: %s, %s',list, slug);
+		//next();
+	},
+
+	searchLists : function(req, res, next) {
+		var query = req.custom;
+		if(!query)
+			res.send(400);
+
+		client.get('lists/statuses', query, function(error, tweets, response) {
+			if(!error)
+				res.send(tweets);
+			else
+				next();
+		});
+	},
+
+	search : function(req, res, next){
+		//encodeURIComponent() if need be
+		console.log(req.params.term);
+		if (!req.params.term)
+			res.send(400);
+
+		var search = req.params.term;
+		var query = {
+			q : search,
+			result_type : req.query.result_type || 'mixed',
+			count : 20
+		};
+
+		client.get('/search/tweets', query, function(error, tweets, response){
+			if(!error) {
+				tweets.search = search;
+				res.send(tweets);
+			}
+			else
+				next();
+		});
+	}
+};
+
+
 /*********** TRENDS **********************************/
 
-router.use('/trends', function(req, res, next) {
-	//defaults to global trends
-	var location = req.params.location || 1;
-	req.custom= {id : location};
+router.use('/trends', handlers.trends);
 
-	console.log('Trends requested for: ' + location);
-	next();
-});
-
-router.get( ['/trends', '/trends/:location'], function(req, res, next){
-	var query = req.custom
-
-	if(!query)
-		res.send(400);
-
-	client.get('trends/place', query, function(error, tweets, response){
-		if (!error) 
-			res.send(tweets);
-		else
-			next();
-	});
-});
+router.get( ['/trends', '/trends/:location'], handlers.searchTrends);
 
 
 /*********** LISTS **********************************/
 
-router.use('/lists', function(req, res,next){
-	//defaults to @BreakingNews\/canada list
-	var list = req.params.list || 6017542;
-	var slug = req.params.slug || 'canada'
-	req.custom = { 
-		list_id : list,
-		slug : slug
-	};
-
-	console.log('List requested for: %s, %s',list, slug);
-	next();
-});
+router.use('/lists', handlers.lists);
 
 
-router.get(['/lists', '/lists/:id/:slug'], function(req, res, next) {
-	var query = req.custom;
-	if(!query)
-		res.send(400);
-
-	client.get('lists/statuses', query, function(error, tweets, response) {
-		if(!error)
-			res.send(tweets);
-		else
-			next();
-	});
-});
-
+router.get(['/lists', '/lists/:id/:slug'], handlers.searchLists);
 
 
 
 /************ SEARCH ****************************************/
-router.get(["/search/:term", "/search/:term/:type"], function(req, res, next){
-	//encodeURIComponent() if need be
-	console.log(req.params.term);
-	if (!req.params.term)
-		res.send(400);
-
-	var search = req.params.term;
-	var query = {
-		q : search,
-		result_type : req.query.result_type || 'mixed',
-		count : 20
-	};
-
-	client.get('/search/tweets', query, function(error, tweets, response){
-		if(!error) {
-			tweets.search = search;
-			res.send(tweets);
-		}
-		else
-			next();
-	});
-});
+router.get(["/search/:term", "/search/:term/:type"], handlers.search);
 
 
 
@@ -102,4 +117,5 @@ router.get(["/search/:term", "/search/:term/:type"], function(req, res, next){
 /*********** Custom Users **********************************/
 
 
-module.exports = router;
+module.exports.router = router;
+module.exports.handlers = handlers;
