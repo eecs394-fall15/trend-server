@@ -6,57 +6,27 @@ var client = new Yahoo(process.env.YAHOO_CLIENT_ID, process.env.YAHOO_CLIENT_SEC
 
 
 
-/*********** TRENDS **********************************/
-/*
-router.use('/trends', function(req, res, next) {
-	//defaults to global trends
-	var location = req.params.location || 1;
-	req.custom= {id : location};
-
-	console.log('Trends requested for: ' + location);
-	next();
-});
-
-router.get( ['/trends', '/trends/:location'], function(req, res, next){
-	var query = req.custom
-
-	if(!query)
-		res.send(400);
-
-	client.get('trends/place', query, function(error, tweets, response){
-		if (!error) 
-			res.send(tweets);
-		else
-			next();
-	});
-});
-*/
-
-
-
 /************ SEARCH ****************************************/
-router.get("/search", function(req, res, next){
+router.get("/search/:search", function(req, res, next){
 	//encodeURIComponent() if need be
-	console.log(req.query);
+	var query = req.params.search;
 
-	var search = req.query.q;
-	console.log(search);
-
-	if (!search)
+	if (!query)
 		res.sendStatus(400);
 
-	var query = {
+	var options = {
 		count : req.query.count || 20
 	};
 
-	/*
-	client.searchNews('yahoo', query, function(error, dataFound, response){
+	
+	client.searchNews(query, options, function(error, dataFound, response){
 		if(!error)
-			res.send(dataFound);
-		else
+			res.send(response);
+		else {
+			console.log(dataFound);
 			next();
-	});*/
-	res.send(req.query);
+		}
+	});
 });
 
-module.exports = router;
+module.exports.router = router;
