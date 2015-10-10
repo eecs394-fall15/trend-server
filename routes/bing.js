@@ -5,43 +5,55 @@ var router = express.Router();
 
 var bingNews = new BingNews();
 
+var requests = {
+	search : function(query, callback) {
+		bingNews.stream(query, function(stream) {
+			var queryData = [];
 
-router.get('/search/:search', function(req, res, next){
+			stream.on(BingNews.DATA, function(data) {
+				return queryData.push(data);
+			});
 
-	var query = req.params.search;
+			stream.on(BingNews.ERROR, function(error) {
+				return console.log('Error Event received... ' + error);
+			});
 
-	if(!query)
-		res.sendStatus(400);
 
-	bingNews.stream(query, function(stream) {
-		var queryData = [];
-
-		stream.on(BingNews.DATA, function(data) {
-			return queryData.push(data);
+			respond(queryData, callback);
 		});
+	}
+};
 
-		stream.on(BingNews.ERROR, function(error) {
-			return console.log('Error Event received... ' + error);
-		});
+var handlers = {
+	search : function(req, res, next){
 
-		//collects from the stream
-		respond(res, queryData);
-	});
-});
+		var query = req.params.search;
+
+		if(!query)
+			res.sendStatus(400);
+
+		requests.search(query, function(data) {res.send(data)});
+	}
+};
+
+router.get('/search/:search', handlers.search);
 
 
-function respond(res, queryData){
+function respond(queryData, callback){
 	if (queryData.length < 3)  { 
 		setTimeout(function(){
-			respond(res, queryData);
+			respond(queryData, callback);
 		}, 250);	
 	} else {
-		res.send(queryData);
+		callback(queryData);
 	}
 }
 
 
-module.exports.router = router;
 
+
+module.exports.router = router;
+module.exports.handlers = handlers;
+module.exports.requests = requests;
 
 

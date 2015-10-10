@@ -6,15 +6,9 @@ var router = express.Router();
 var googleNews = new GoogleNews();
 
 
-
-router.get('/search/:search', function(req, res, next){
-
-	var query = req.params.search;
-
-	if(!query)
-		res.sendStatus(400);
-
-	googleNews.stream(query, function(stream) {
+var requests = {
+	search : function(query, callback) {
+		googleNews.stream(query, function(stream) {
 		var queryData = [];
 
 		stream.on(GoogleNews.DATA, function(data) {
@@ -26,22 +20,42 @@ router.get('/search/:search', function(req, res, next){
 		});
 
 
-		respond(res, queryData);
+		respond(queryData, callback);
 	});
-});
+	}
+
+};
+
+var handlers = {
+	search : function(req, res, next){
+
+		var query = req.params.search;
+
+		if(!query)
+			res.sendStatus(400);
+
+		requests.search(query, function(data) {res.send(data)});
+	}
+};
+
+router.get('/search/:search', handlers.search);
 
 
-function respond(res, queryData){
+function respond(queryData, callback){
 	if (queryData.length < 3)  { 
 		setTimeout(function(){
-			respond(res, queryData);
+			respond(queryData, callback);
 		}, 250);	
 	} else {
-		res.send(queryData);
+		callback(queryData);
 	}
 }
 
+
+
 module.exports.router = router;
+module.exports.handlers = handlers;
+module.exports.requests = requests;
 
 
 

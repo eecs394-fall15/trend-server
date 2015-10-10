@@ -3,6 +3,14 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 
+var requests = {
+
+	search : function(query, callback) {
+		request.get(query, function(error, response, body){				
+			callback(error, response, body);
+		});
+	}
+};
 
 var handlers = {
 	search: function(req, res, next){
@@ -11,9 +19,9 @@ var handlers = {
 		if (!req.params.term)
 			res.send(400);
 
-		var search = "https://www.reddit.com/search.json?q=" + req.params.term + "+subreddit:news";
+		var query = "https://www.reddit.com/search.json?q=" + req.params.term + "+subreddit:news";
 
-		request.get(search, function(error, response, body){
+		requests.search(query, function(error, response, body) {
 			if(!error) {
 				res.send(body);
 			}
@@ -31,3 +39,4 @@ router.get("/search/:term", handlers.search);
 
 module.exports.router = router;
 module.exports.handlers = handlers;
+module.exports.requests = requests;

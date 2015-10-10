@@ -1,5 +1,5 @@
 var express = require('express');
-var async = require('async');
+// var async = require('async');
 var lib = require('./lib');
 var router = express.Router;
 

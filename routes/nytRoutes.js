@@ -13,6 +13,15 @@ var client = new NYT(keys);
 var router = express.Router();
 
 
+var requests = {
+	search : function(query, callback){
+		client.article.search(query, function(articles, error){
+			callback(articles, error);
+		});
+	}
+}
+
+
 var handlers = {
 	search:  function(req, res, next){
 		//encodeURIComponent() if need be
@@ -26,12 +35,12 @@ var handlers = {
 			sort : 'newest'
 		};
 
-		client.article.search(query, function(articles, error){
+		requests.search(query, function(articles, error){
 			if(!error)
 				res.send(articles);
 			else {
 				console.log(error);
-				//next();
+				next();
 			}
 		});
 	}
@@ -46,3 +55,4 @@ router.get("/search/:term", handlers.search);
 
 module.exports.router = router;
 module.exports.handlers = handlers;
+module.exports.requests = requests;

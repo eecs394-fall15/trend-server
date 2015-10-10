@@ -11,6 +11,20 @@ var client = new Twitter({
 	access_token_secret: process.env.ACCESS_TOKEN_SECRET
 });
 
+var requests = {
+	searchTrends : function(query, callback){
+		client.get('trends/place', query, function(error, tweets, response){
+			callback(error, tweets, response);
+		});
+	},
+
+	search : function(query,callback) {
+		client.get('/search/tweets', query, function(error, tweets, response){
+			callback(error,tweets, response);
+		});
+	}
+
+}
 
 
 var handlers = {
@@ -23,17 +37,20 @@ var handlers = {
 		next();
 	},
 
+
 	searchTrends: function(req, res, next){
 		var query = req.custom
 
 		if(!query)
 			res.send(400);
 
-		client.get('trends/place', query, function(error, tweets, response){
+		requests.searchTrends(query, function(error, tweets, response){
 			if (!error) 
 				res.send(tweets);
-			else
+			else {
+				console.log(error);
 				next();
+			}
 		});
 	},
 
@@ -78,16 +95,18 @@ var handlers = {
 			count : 20
 		};
 
-		client.get('/search/tweets', query, function(error, tweets, response){
-			if(!error) {
+		requests.search(query, function(error, tweets, response){
+			if (!error) {
 				tweets.search = search;
 				res.send(tweets);
-			}
-			else
+			} else
 				next();
 		});
+
 	}
 };
+
+
 
 
 /*********** TRENDS **********************************/
@@ -119,3 +138,4 @@ router.get(["/search/:term", "/search/:term/:type"], handlers.search);
 
 module.exports.router = router;
 module.exports.handlers = handlers;
+module.exports.requests = requests;
