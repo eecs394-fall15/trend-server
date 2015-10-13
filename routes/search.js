@@ -76,7 +76,7 @@ var searchSites = function(sites, query, cb){
 
 router.post("/", function(req, res, next){
 	console.log(req.body);
-	var sites = req.body.sites.split(',');
+	var sites = req.body.sites === 'all' ? SITES : req.body.sites.split(',');
 	console.log(sites);
 	var search = req.body.search;
 
