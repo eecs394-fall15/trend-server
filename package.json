@@ -15,6 +15,7 @@
     "express": "~4.13.1",
     "facebook-node": "0.0.3",
     "google-news": "^1.4.6",
+    "json-select": "^2.2.0",
     "morgan": "~1.6.1",
     "node-9gag": "^0.2.3",
     "npr-api": "^1.1.2",

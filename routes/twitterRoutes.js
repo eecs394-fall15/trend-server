@@ -18,9 +18,17 @@ var requests = {
 		});
 	},
 
-	search : function(query,callback) {
+	search : function(query, callback) {
+		if (query != null && typeof query !== 'object'){
+			query = {
+				q : query,
+				result_type : 'mixed',
+				count : 20
+			};
+		}
+
 		client.get('/search/tweets', query, function(error, tweets, response){
-			callback(error,tweets, response);
+			callback(error, tweets, response);
 		});
 	}
 

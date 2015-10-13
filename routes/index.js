@@ -19,7 +19,7 @@ router.use('/ninegag', require('./ninegag').router);
 router.use('/facebook', require('./facebook').router);
 router.use('/google', require('./google').router);
 router.use('/bing', require('./bing').router);
-
+router.use('/search', require('./search').router);
 
 // router.use('/search', require('./search'));
 

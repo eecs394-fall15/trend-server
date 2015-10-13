@@ -6,8 +6,10 @@ var request = require('request');
 var requests = {
 
 	search : function(query, callback) {
+		query = "https://www.reddit.com/search.json?q=" + query +  "+subreddit:news";
+
 		request.get(query, function(error, response, body){				
-			callback(error, response, body);
+			callback(error, body, response);
 		});
 	}
 };
@@ -19,9 +21,9 @@ var handlers = {
 		if (!req.params.term)
 			res.send(400);
 
-		var query = "https://www.reddit.com/search.json?q=" + req.params.term + "+subreddit:news";
+		var query = req.params.term;
 
-		requests.search(query, function(error, response, body) {
+		requests.search(query, function(error, body, response) {
 			if(!error) {
 				res.send(body);
 			}
