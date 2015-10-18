@@ -16,8 +16,6 @@ var requests = {
 
 var handlers = {
 	search: function(req, res, next){
-		//encodeURIComponent() if need be
-		console.log(req.params.term);
 		if (!req.params.term)
 			res.send(400);
 

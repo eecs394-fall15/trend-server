@@ -4,3 +4,4 @@ private/*
 npm-debug.log
 .DS_Store
 /*.env
+private

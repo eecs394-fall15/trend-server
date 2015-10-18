@@ -1,24 +1,20 @@
 var express = require('express');
 var router = express.Router();
-var async = require('async');
 
-
-
-// var async = require('async');
-// var lib = require('./lib');
 
 
 //request handlers to use for searching
 var requests = {
-	twitter : require('./twitterRoutes').requests,
- 	reddit : require('./redditRoutes').requests,
- 	nyt : require('./nytRoutes').requests,
- 	ninegag : require('./ninegag').requests,
- 	google :require('./google').requests,
-	bing : require('./bing').requests,
+	twitter : require('./newsSources/twitterRoutes').requests,
+ 	reddit : require('./newsSources/redditRoutes').requests,
+ 	nyt : require('./newsSources/nytRoutes').requests,
+ 	ninegag : require('./newsSources/ninegag').requests,
+ 	google :require('./newsSources/google').requests,
+	bing : require('./newsSources/bing').requests,
 };
 
 
+//list of all sites supported
 var SITES = ['reddit', 'twitter', 'nyt', 'google', 'ninegag', 'bing'];
 
 
@@ -52,8 +48,11 @@ var searchSites = function(sites, query, cb){
 	function finish(err, data, site){
 		if (err)
 			complete[site] = err;
-		else
+		else {
+			if(site ==="reddit")
+				data = JSON.parse(data);	
 			complete[site] = data;
+		}
 
 		var finished = true;
 
@@ -68,20 +67,14 @@ var searchSites = function(sites, query, cb){
 }
 
 
-/*searchSites(['bing','ninegag', 'twitter', 'google', 'reddit', 'nyt'], 'pope', function(err, data){
-	if(err) console.log(err);
-	else console.log(data);
-})*/
-
 
 router.post("/", function(req, res, next){
-	console.log(req.body);
 	var sites = req.body.sites.split(',');
-	console.log(sites);
 	var search = req.body.search;
 
 	searchSites(sites, search, function(err, data){
-		res.send(data);
+		console.log(data);
+		res.json(data);
 	});
 });
 

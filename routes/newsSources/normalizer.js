@@ -28,13 +28,20 @@ console.log(select(
 exports.twitter = {
 
 	search : function(tweets){
-		return select(tweets, ['statuses', true, {
+		var ret = {}
+		ret.tweets = select(tweets, ['statuses', true, {
 			created_at: true,
 			text: true,
-		}, 'search_metadata', true, {
-			nextPage :  'search_metadata', 
-			query: 'search_metadata'
+			user: 'user.*.screen_name'
 		}]);
+
+		ret.metadata = {
+			next_results : tweets.search_metadata.next_results,
+			query  : tweets.search_metadata.query,
+			count : tweets.search_metadata.count
+		};
+
+		return ret;
 
 			/*{ 
 				created_at : true,
