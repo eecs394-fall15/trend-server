@@ -47,7 +47,9 @@ var handlers = {
 
 
 	searchTrends: function(req, res, next){
-		var query = req.custom
+		var query = {id : req.params.location};
+
+		console.log(req.params.location);
 
 		if(!query)
 			res.send(400);
@@ -119,7 +121,7 @@ var handlers = {
 
 /*********** TRENDS **********************************/
 
-router.use('/trends', handlers.trends);
+//router.use('/trends', handlers.trends);
 
 router.get( ['/trends', '/trends/:location'], handlers.searchTrends);
 
